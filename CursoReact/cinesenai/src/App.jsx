@@ -1,6 +1,7 @@
-import { CartaoDeVisita } from "../teste-jsx/CartaoDeVisita";
-import { FichaDoFilme } from "../teste-jsx/FichaDoFilme";
+
+
 import { NavBar } from "./components/NavBar";
+import {Home} from "./pages/Home";
 
 function App () {
   
@@ -8,9 +9,7 @@ function App () {
 
     <>
     <NavBar/>
-    <div className="container">
-        <h1>Catálogo</h1>
-    </div>
+      <Home />    
     </>
   );
 }
