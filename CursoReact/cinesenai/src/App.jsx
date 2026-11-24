@@ -1,15 +1,14 @@
+import { Navbar } from "./components/Navbar";
+import { Home } from "./pages/Home";
+import { Contador } from "./components/Contador";
 
+function App() {
 
-import { NavBar } from "./components/NavBar";
-import {Home} from "./pages/Home";
-
-function App () {
-  
   return (
-
     <>
-    <NavBar/>
-      <Home />    
+      <Contador />
+      <Navbar />
+      <Home />
     </>
   );
 }
