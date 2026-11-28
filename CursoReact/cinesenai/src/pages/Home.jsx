@@ -61,15 +61,77 @@ const filmes = [
 export const Home = () => {
 
   const [search, setSearch] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const featuredMovies = filmes.slice(0, 5);
+  const featuredMovie = featuredMovies[activeIndex];  // vai guardar o carrosel e buscar aonde a posição dele está
 
   const filteredFilmes = filmes.filter((filme) => {
     const matchesSearch = filme.titulo.toLowerCase().includes(search.toLowerCase()) || (filme.descricao && filme.descricao.toLowerCase().includes(search.toLowerCase())); //tudo minusculo
 
-    return matchesSearch;
+    const matchesGenre = selectedGenre === "" || filme .genero === selectedGenre;
+
+    return matchesSearch && matchesGenre;
   });
 
   return (
     <div className="container">
+
+      {/* so faz se for verdade */}
+      {featuredMovie && (
+
+        <div className="featured-banner"
+        key={featuredMovie.id}
+        style={{backgroundImage: featuredMovie.urlPoster ? `url(${featuredMovie.urlPoster})` : 'none'}}
+        
+        >
+
+          <div className="featured-content">
+
+            <span className="badge badge-primary featured-badge"> Em Destaque</span>
+            <h1 className="featured-tittle">{featuredMovie.titulo}</h1>
+            <p  className="featured-desc"> 
+              {featuredMovie.descricao 
+              ? featuredMovie.descricao.substring(0, 180) + ".."
+              : "Sem descrição disponível."
+              }
+            </p>
+
+            <div className="featured-actions">
+                <span className="featured-meta"> 
+                  <strong>Duração: </strong>{featuredMovie.duracaoMinutos} min
+                </span>
+
+                <span className="badge badge-success">
+                  {GENERO_LABELS[featuredMovie.genero] || featuredMovie.genero}
+                </span>
+
+                <a href={`/sessoes?filmeId=${featuredMovie.id}`} className="btn btn-primary featured-cta">Ver Sessões</a>
+            </div>
+
+              
+
+          </div>
+
+          {featuredMovies.length > 1 && (
+            <div className="featured-dots">
+                {featuredMovies.map((filme, index) =>(
+                  <button
+                    key={filme.id}
+                    type="button"
+                    className={'featured-dot' + (index === activeIndex ? 'featured-dot--active' : "")}
+                    aria-label={`Mostrar destaque ${filme.titulo}`}
+                    onClick={() => setActiveIndex(index)}
+                 />
+                ))}
+            </div>
+          )}
+            
+        </div>
+
+
+      )} 
       <div className="page-header catalog-header">
         <h2 className="catalog-title">Nosso catálogo</h2>
 
@@ -81,6 +143,26 @@ export const Home = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
+            </div>
+
+            <div className="filter-genre">
+              <select
+              className="form-control"
+              value={selectedGenre}
+              onChange={(e) => setSelectedGenre(e.target.value)}
+              >
+                <option value="">Todos os Gêneros</option>
+                {Object.entries(GENERO_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+                {/* Object faz a conversão */}
+              </select>
+
+                {(search !== "" || selectedGenre !== "") && (
+                  <button className="btn btn-secondary" onClick={() => {setSearch(""); setSelectedGenre("")}}>
+                    Limpar
+                  </button>
+                )}
             </div>
         </div>
 
